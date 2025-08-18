@@ -15,7 +15,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "bigint", name = "user_id")
+    @Column(columnDefinition = "bigint", name = "user_id", unique = true)
     private Long userId;
 
     @Column(columnDefinition = "bigint")

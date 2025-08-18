@@ -15,37 +15,27 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "bigint", name = "sender_id")
-    private Long senderId;
+    @Column(columnDefinition = "bigint", name = "user_id")
+    private Long userId;
 
-    @Column(columnDefinition = "bigint", name = "sender_account_id")
-    private Long senderAccountId;
-
-    @Column(columnDefinition = "bigint", name = "receiver_id")
-    private Long receiverId;
-
-    @Column(columnDefinition = "bigint", name = "receiver_account_id")
-    private Long receiverAccountId;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     @Column(columnDefinition = "bigint")
     private Long amount;
 
     @Builder
-    private Transaction(Long senderId, Long senderAccountId, Long receiverId, Long receiverAccountId, Long amount) {
-        this.senderId = senderId;
-        this.senderAccountId = senderAccountId;
-        this.receiverId = receiverId;
-        this.receiverAccountId = receiverAccountId;
+    private Transaction(Long userId, Long amount, Type type) {
+        this.userId = userId;
         this.amount = amount;
+        this.type = type;
     }
 
-    public static Transaction create(Long senderId, Long senderAccountId, Long receiverId, Long receiverAccountId, Long amount) {
+    public static Transaction create(Long userId, Long amount, Type type) {
         return Transaction.builder()
-                .senderId(senderId)
-                .senderAccountId(senderAccountId)
-                .receiverId(receiverId)
-                .receiverAccountId(receiverAccountId)
+                .userId(userId)
                 .amount(amount)
+                .type(type)
                 .build();
     }
 }
