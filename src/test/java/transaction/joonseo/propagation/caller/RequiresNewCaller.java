@@ -16,6 +16,9 @@ public class RequiresNewCaller {
         this.requiresNewCallee = requiresNewCallee;
     }
 
+    /**
+     * @return 호출 메소드와 피호출 메소드가 같은 트랜잭션에서 실행되고 있는지 여부
+     */
     // POINT [propagation = Propagation.REQUIRES_NEW] 호출 메소드의 트랜잭션이 이미 있는 경우
     @Transactional
     public boolean outerMethodWithTransaction(){
@@ -31,7 +34,9 @@ public class RequiresNewCaller {
         return callerHashCode == calleeHashCode;
     }
 
-
+    /**
+     * @return 호출 메소드와 피호출 메소드가 같은 트랜잭션에서 실행되고 있는지 여부
+     */
     // POINT [propagation = Propagation.REQUIRES_NEW] 호출 메소드의 트랜잭션이 없는 경우
     public boolean outerMethodWithoutTransaction(){
         int callerHashCode;
@@ -49,6 +54,6 @@ public class RequiresNewCaller {
         System.out.println("callerHashCode = " + callerHashCode);
         System.out.println("calleeHashCode = " + calleeHashCode);
 
-        return callerHashCode == calleeHashCode;
+        return callerHashCode == calleeHashCode && callerHashCode == 0;
     }
 }
