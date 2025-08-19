@@ -2,7 +2,6 @@ package transaction.joonseo.domain.bank.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import transaction.joonseo.domain.account.service.AccountService;
 import transaction.joonseo.domain.alarm.service.AlarmService;
 import transaction.joonseo.domain.transaction.entity.Type;
@@ -12,12 +11,10 @@ import transaction.joonseo.domain.transaction.service.TransactionService;
 @RequiredArgsConstructor
 public class BankService {
 
-    // 출금, 입금, 송금, 조희 구현
     private final AccountService accountService;
     private final TransactionService transactionService;
     private final AlarmService alarmService;
 
-    @Transactional
     public Long withdraw(Long userId, Long amount) {
         // 계좌에서 출금
         Long balance = accountService.withdraw(userId, amount);
@@ -32,7 +29,6 @@ public class BankService {
         return balance;
     }
 
-    @Transactional
     public Long deposit(Long userId, Long amount) {
         // 계좌에 입금
         Long balance = accountService.deposit(userId, amount);
@@ -47,7 +43,6 @@ public class BankService {
         return balance;
     }
 
-    @Transactional
     public void transfer(Long senderId, Long receiverId, Long amount) {
         // 송신 계좌에서 출금, 잔액 부족이면 예외 반환
         try{
@@ -70,9 +65,7 @@ public class BankService {
         alarmService.sendAlarm(receiverId, amount, Type.DEPOSIT.getMessage());
     }
 
-    @Transactional(readOnly = true)
     public String getBalance(Long userId){
         return "사용자 " + userId.toString() + "번의 잔액 : " + accountService.getBalance(userId).toString() + "원";
     }
-
 }
