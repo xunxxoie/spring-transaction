@@ -3,41 +3,41 @@ package transaction.joonseo.propagation.caller;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import transaction.joonseo.propagation.callee.NeverCallee;
+import transaction.joonseo.propagation.callee.NestedCallee;
 
 import java.util.Collections;
 
 @Component
-public class NeverCaller {
+public class NestedCaller {
 
-    private final NeverCallee neverCallee;
+    private final NestedCallee nestedCallee;
 
-    public NeverCaller(NeverCallee neverCallee) {
-        this.neverCallee = neverCallee;
+    public NestedCaller(NestedCallee nestedCallee) {
+        this.nestedCallee = nestedCallee;
     }
 
     /**
      * @return 호출 메소드와 피호출 메소드가 같은 트랜잭션에서 실행되고 있는지 여부
      */
-    // POINT [propagation = Propagation.NEVER] 호출 메소드의 트랜잭션이 이미 있는 경우
+    // POINT [propagation = Propagation.NESTED] 호출 메소드의 트랜잭션이 이미 있는 경우
     @Transactional
     public boolean outerMethodWithTransaction(){
 
         Object callerResourceMap = TransactionSynchronizationManager.getResourceMap();
         int callerHashCode = callerResourceMap.hashCode();
 
-        int calleeHashCode = neverCallee.innerMethod(); // IllegalTransactionStateException 발생 지점
+        int calleeHashCode = nestedCallee.innerMethod();
 
         System.out.println("callerHashCode = " + callerHashCode);
         System.out.println("calleeHashCode = " + calleeHashCode);
 
-        return callerHashCode == calleeHashCode && calleeHashCode == 0;
+        return callerHashCode == calleeHashCode && calleeHashCode != 0;
     }
 
     /**
      * @return 호출 메소드와 피호출 메소드가 같은 트랜잭션에서 실행되고 있는지 여부
      */
-    // POINT [propagation = Propagation.NEVER] 호출 메소드의 트랜잭션이 없는 경우
+    // POINT [propagation = Propagation.NESTED] 호출 메소드의 트랜잭션이 없는 경우
     public boolean outerMethodWithoutTransaction(){
         int callerHashCode;
 
@@ -49,11 +49,11 @@ public class NeverCaller {
             callerHashCode = callerResourceMap.hashCode();
         }
 
-        int calleeHashCode = neverCallee.innerMethod();
+        int calleeHashCode = nestedCallee.innerMethod();
 
         System.out.println("callerHashCode = " + callerHashCode);
         System.out.println("calleeHashCode = " + calleeHashCode);
 
-        return callerHashCode == calleeHashCode && callerHashCode == 0;
+        return callerHashCode == calleeHashCode && callerHashCode != 0;
     }
 }
