@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
-public class PropagationCallee {
+public class RequiredCallee {
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public int innerMethodWithTransaction(){
+    public int innerMethod(){
         Object resourceMap = TransactionSynchronizationManager.getResourceMap();
         return resourceMap.hashCode();
     }

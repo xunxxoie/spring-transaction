@@ -1,29 +1,29 @@
 package transaction.joonseo.propagation.caller;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import transaction.joonseo.propagation.callee.PropagationCallee;
+import transaction.joonseo.propagation.callee.RequiredCallee;
 
 import java.util.Collections;
 
-@Service
-public class PropagationCaller {
+@Component
+public class RequiredCaller {
 
-    private final PropagationCallee propagationCallee;
+    private final RequiredCallee requiredCallee;
 
-    public PropagationCaller(PropagationCallee propagationCallee) {
-        this.propagationCallee = propagationCallee;
+    public RequiredCaller(RequiredCallee requiredCallee) {
+        this.requiredCallee = requiredCallee;
     }
 
-    // POINT 호출 메소드에서 트랜잭션이 이미 있는 경우
+    // POINT [propagation = Propagation.REQUIRED] 호출 메소드의 트랜잭션이 이미 있는 경우
     @Transactional
     public boolean outerMethodWithTransaction(){
 
         Object callerResourceMap = TransactionSynchronizationManager.getResourceMap();
         int callerHashCode = callerResourceMap.hashCode();
 
-        int calleeHashCode = propagationCallee.innerMethodWithTransaction();
+        int calleeHashCode = requiredCallee.innerMethod();
 
         System.out.println("callerHashCode = " + callerHashCode);
         System.out.println("calleeHashCode = " + calleeHashCode);
@@ -32,7 +32,7 @@ public class PropagationCaller {
     }
 
 
-    // POINT 호출 메소드에서 트랜잭션이 없는 경우
+    // POINT [propagation = Propagation.REQUIRED] 호출 메소드의 트랜잭션이 없는 경우
     public boolean outerMethodWithoutTransaction(){
         int callerHashCode;
 
@@ -44,7 +44,7 @@ public class PropagationCaller {
             callerHashCode = callerResourceMap.hashCode();
         }
 
-        int calleeHashCode = propagationCallee.innerMethodWithTransaction();
+        int calleeHashCode = requiredCallee.innerMethod();
 
         System.out.println("callerHashCode = " + callerHashCode);
         System.out.println("calleeHashCode = " + calleeHashCode);

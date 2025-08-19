@@ -4,21 +4,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import transaction.joonseo.propagation.caller.PropagationCaller;
+import transaction.joonseo.propagation.caller.RequiredCaller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class PropagationTest {
+class RequiredTest {
 
     @Autowired
-    private PropagationCaller propagationCaller;
+    private RequiredCaller requiredCaller;
 
     @Test
     @DisplayName("호출 메소드의 트랜잭션이 있다면, 피호출 메소드는 해당 트랜잭션에서 실행된다.")
     void callerMethodWithTransaction(){
         //when
-        boolean result = propagationCaller.outerMethodWithTransaction();
+        boolean result = requiredCaller.outerMethodWithTransaction();
 
         //then
         assertThat(result).isTrue();
@@ -28,7 +28,7 @@ class PropagationTest {
     @DisplayName("호출 메소드의 트랜잭션이 없다면, 피호출 메소드는 새로운 트랜잭션에서 실행된다.")
     void callerMethodWithoutTransaction(){
         //when
-        boolean result = propagationCaller.outerMethodWithoutTransaction();
+        boolean result = requiredCaller.outerMethodWithoutTransaction();
 
         //then
         assertThat(result).isFalse();
