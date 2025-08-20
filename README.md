@@ -1,4 +1,4 @@
-# Spring Transaction 테스트 요약
+# Spring Transaction 테스트
 
 ## 1. 트랜잭션 전파(Propagation) 테스트
 
@@ -26,6 +26,8 @@
 - 항상 트랜잭션 없이 실행
 - 기존 트랜잭션이 있어도 일시 중단
 
+<br>
+
 ## 2. 트랜잭션 격리 수준(Isolation Level) 테스트
 
 ### READ_UNCOMMITTED
@@ -40,11 +42,15 @@
 - **Phantom Read** 발생 가능성 검증
 - 동일한 로우는 일관성 있게 읽히지만, 테이블 크기는 변경될 수 있음을 확인
 
+<br>
+
 ## 3. 롤백(Rollback) 테스트
 
 ### rollbackFor/noRollbackFor 옵션
 - `rollbackFor = IllegalAccessException.class`: 체크 예외 발생 시 롤백 수행
 - `noRollbackFor = IllegalArgumentException.class`: 언체크 예외 발생 시 롤백 수행하지 않음
+
+<br>
 
 ## 4. 테스트 구현 방식
 
